@@ -34,7 +34,48 @@ router.post("/", async (req, res, next) => {
   }
 });
 
-router.get("/:Id", async (req, res, next) => {});
+router.put("/", async (req, res, next) => {
+  try {
+    const grade = req.body;
+    if (
+      !grade.id ||
+      !grade.student ||
+      !grade.subject ||
+      !grade.type ||
+      !grade.value == null
+    ) {
+      throw new Error("All parameters are required");
+    }
+    const data = JSON.parse(await readFile(global.fileName));
+    const index = data.grades.findIndex((a) => a.id == grade.id);
+
+    if (index === -1) {
+      throw new Error("Grade not found");
+    }
+
+    data.grades[index].student = grade.student;
+    data.grades[index].subject = grade.subject;
+    data.grades[index].type = grade.type;
+    data.grades[index].value = grade.value;
+    data.grades[index].timestamp = new Date();
+    await writeFile(global.fileName, JSON.stringify(data, null, 2));
+    res.send(grade);
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/:id", async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.fileName));
+    const grade = data.grades.find(
+      (grade) => grade.id === parseInt(req.params.id)
+    );
+    res.send(grade);
+  } catch (error) {
+    next(error);
+  }
+});
 
 router.use((error, req, res, next) => {
   res.status(400).send({ error: error.message });
