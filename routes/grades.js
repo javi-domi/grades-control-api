@@ -65,6 +65,20 @@ router.put("/", async (req, res, next) => {
   }
 });
 
+router.delete("/:id", async (req, res, next) => {
+  try {
+    const data = JSON.parse(await readFile(global.fileName));
+    data.grades = data.grades.filter(
+      (grade) => grade.id !== parseInt(req.params.id)
+    );
+
+    await writeFile(global.fileName, JSON.stringify(data, null, 2));
+    res.end();
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.get("/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile(global.fileName));

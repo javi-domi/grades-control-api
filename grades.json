@@ -386,20 +386,12 @@
       "timestamp": "2020-05-19T18:21:25.284Z"
     },
     {
-      "id": 49,
-      "student": "Luisa Forain",
-      "subject": "React",
+      "id": 50,
+      "student": "Javier Dominguez",
+      "subject": "04 - React",
       "type": "Fórum",
       "value": 50,
-      "timestamp": null
-    },
-    {
-      "id": 50,
-      "student": "Javi Domi",
-      "subject": "Matematicas",
-      "type": "Tarea",
-      "value": 14,
-      "timestamp": "2021-03-29T18:44:07.703Z"
+      "timestamp": "2021-03-29T22:19:53.726Z"
     }
   ]
 }
