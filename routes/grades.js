@@ -91,6 +91,23 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
+router.get("/", async (req, res, next) => {
+  try {
+    const { student, subject } = req.query;
+    const data = JSON.parse(await readFile(global.fileName));
+    const sumGrades = data.grades
+      .filter((grade) => {
+        return grade.student === student && grade.subject === subject;
+      })
+      .reduce((acc, curr) => acc + curr.value, 0);
+
+    console.log(sumGrades);
+    res.send(sumGrades.toString());
+  } catch (error) {
+    next(error);
+  }
+});
+
 router.use((error, req, res, next) => {
   res.status(400).send({ error: error.message });
 });
