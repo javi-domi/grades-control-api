@@ -65,7 +65,7 @@ router.put("/", async (req, res, next) => {
   }
 });
 
-router.delete("/:id", async (req, res, next) => {
+router.delete("/eliminar/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile(global.fileName));
     data.grades = data.grades.filter(
@@ -79,7 +79,7 @@ router.delete("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/:id", async (req, res, next) => {
+router.get("/buscar/:id", async (req, res, next) => {
   try {
     const data = JSON.parse(await readFile(global.fileName));
     const grade = data.grades.find(
@@ -91,7 +91,7 @@ router.get("/:id", async (req, res, next) => {
   }
 });
 
-router.get("/", async (req, res, next) => {
+router.get("/total", async (req, res, next) => {
   try {
     const { student, subject } = req.query;
     const data = JSON.parse(await readFile(global.fileName));
@@ -103,6 +103,43 @@ router.get("/", async (req, res, next) => {
 
     console.log(sumGrades);
     res.send(sumGrades.toString());
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/subjectType", async (req, res, next) => {
+  try {
+    const { subject, type } = req.query;
+    const data = JSON.parse(await readFile(global.fileName));
+    const totalElementos = data.grades.filter((grade) => {
+      return grade.subject === subject && grade.type === type;
+    }).length;
+    const sumValues = data.grades
+      .filter((grade) => {
+        return grade.subject === subject && grade.type === type;
+      })
+      .reduce((acc, curr) => acc + curr.value, 0);
+    const media = sumValues / totalElementos;
+    console.log(media);
+    res.send(media.toString());
+  } catch (error) {
+    next(error);
+  }
+});
+
+router.get("/threeBest", async (req, res, next) => {
+  try {
+    const { subject, type } = req.query;
+    const data = JSON.parse(await readFile(global.fileName));
+    const threeBest = data.grades
+      .filter((grade) => {
+        return grade.subject === subject && grade.type === type;
+      })
+      .sort((a, b) => b.value - a.value)
+      .splice(0, 3);
+    console.log(threeBest);
+    res.send(threeBest);
   } catch (error) {
     next(error);
   }
